@@ -3,37 +3,32 @@ name: Deploy React App to GitHub Pages
 on:
   push:
     branches:
-      - main  # Deploy only when pushing to main branch
+      - main  # Deploy whenever you push to main branch
 
 permissions:
   contents: write
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout Code
-      - name: Checkout repository
+      - name: Checkout Repository
         uses: actions/checkout@v3
 
-      # Step 2: Setup Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 18
 
-      # Step 3: Install Dependencies
-      - name: Install dependencies
+      - name: Install Dependencies
+        working-directory: ./frontend
         run: npm install
-        working-directory: ./frontend
 
-      # Step 4: Build React App
-      - name: Build app
+      - name: Build React App
+        working-directory: ./frontend
         run: npm run build
-        working-directory: ./frontend
 
-      # Step 5: Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
