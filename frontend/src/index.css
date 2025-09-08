@@ -1,0 +1,6 @@
+body {margin:0;font-family:Arial,sans-serif;background:#f8f9fa;}
+input {padding:0.5rem;margin-right:0.5rem;}
+table {border-collapse:collapse;width:100%;background:#fff;}
+th,td {border:1px solid #ddd;padding:8px;}
+th {background:#343a40;color:#fff; }
+.container {padding:2rem;max-width:1100px;margin:auto;}
