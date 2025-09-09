@@ -1,28 +1,38 @@
-const API_BASE =
-  process.env.REACT_APP_API_BASE && process.env.REACT_APP_API_BASE.trim().length>0
-    ? process.env.REACT_APP_API_BASE
-    : 'http://localhost:8080';
+let API_BASE = 'http://localhost:8080'; // default for manual run
 
-async function getJson(url,options){
-  const res=await fetch(url,options);
-  if (!res.ok){
-    const text=await res.text().catch(()=>'');
+if (process.env.REACT_APP_API_BASE?.trim()) {
+  const envBase = process.env.REACT_APP_API_BASE.trim();
+
+  // If frontend running in container but browser is on host
+  if (envBase.includes('backend') && window.location.hostname !== 'backend') {
+    API_BASE = 'http://host.docker.internal:8080';
+  } else {
+    API_BASE = envBase;
+  }
+}
+
+
+// Helper function to fetch JSON
+async function getJson(url, options) {
+  const res = await fetch(url, options);
+  if (!res.ok) {
+    const text = await res.text().catch(() => '');
     throw new Error(`HTTP ${res.status} ${res.statusText} ${text}`);
   }
   return res.json();
 }
 
-export async function getUsers(){
-  const body=await getJson(`${API_BASE}/api/users`);
-  return body?.data??[];
-}
-
-export async function searchUsers(text){
-  const body=await getJson(`${API_BASE}/api/users/search?text=${encodeURIComponent(text)}`);
+export async function getUsers() {
+  const body = await getJson(`${API_BASE}/api/users`);
   return body?.data ?? [];
 }
 
-export async function loadUsers(){
-  const body=await getJson(`${API_BASE}/api/users/load`,{ method:'POST'});
+export async function searchUsers(text) {
+  const body = await getJson(`${API_BASE}/api/users/search?text=${encodeURIComponent(text)}`);
+  return body?.data ?? [];
+}
+
+export async function loadUsers() {
+  const body = await getJson(`${API_BASE}/api/users/load`, { method: 'POST' });
   return body;
 }
